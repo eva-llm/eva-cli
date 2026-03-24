@@ -40,6 +40,13 @@
     "@clack/prompts": "^1.1.0",
     "commander": "^14.0.3",
     "picocolors": "^1.1.1",
-    "undici": "^7.24.5"
+    "undici": "^7.24.5",
+    "uuidv7": "^1.2.1",
+    "@eva-llm/eva-parser": "github:eva-llm/eva-parser"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@eva-llm/eva-parser"
+    ]
   }
 }

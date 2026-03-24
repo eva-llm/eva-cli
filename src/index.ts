@@ -3,6 +3,9 @@
 import { Command } from 'commander';
 import * as p from '@clack/prompts';
 import color from 'picocolors';
+import { parsePromptfoo } from '@eva-llm/eva-parser';
+import { readFileSync } from 'node:fs';
+import { uuidv7 } from 'uuidv7';
 
 const program = new Command();
 
@@ -32,17 +35,30 @@ program
     }
 
     const s = p.spinner();
-    s.start(`Connecting to eva-run (Target: ${options.remote ? 'Remote' : 'Local'})...`);
-    
-    // Mock logic of eva-run (Postgres/Redis+ClickHouse) interaction
-    await new Promise((res) => setTimeout(res, 2000)); 
+
+    const fileContent = readFileSync(path, 'utf-8');
+    const evalRequest = parsePromptfoo(fileContent);
+    const runId = uuidv7();
+
+    for (const evaTest of evalRequest) {
+      s.message(color.yellow('Submitting to eva-run cluster (localhost:3000)...'));
+
+      const response = await fetch('http://localhost:3000/eval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ run_id: runId, ...evaTest }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}: ${await response.text()}`);
+      }
+
+      const result = await response.json();
+
+      s.stop(color.green(`Submission successful! ${JSON.stringify(result)}`));
+    }
 
     s.stop(color.green('Test suite submitted successfully!'));
-
-    p.note(
-      `Dashboard: ${color.underline('https://eva-web.local/results/123')}`,
-      'Next Steps'
-    );
 
     p.outro('Happy testing!');
   });

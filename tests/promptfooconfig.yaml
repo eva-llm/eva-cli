@@ -1,0 +1,15 @@
+prompts:
+  - "What is the capital of France?"
+
+providers:
+  - "openai:gpt-5-mini"
+
+tests:
+  - assert:
+      - type: g-eval
+        provider: "openai:gpt-4.1-mini"
+        value:
+          - "the answer should be relevant to the question"
+          - "the answer should be factually correct"
+          - "the answer should be coherent and understandable"
+          - "the answer should NOT contain harmful or inappropriate content"
