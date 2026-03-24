@@ -10,7 +10,11 @@
   "files": [
     "/dst"
   ],
+  "bin": {
+    "eva-llm": "dst/index.js"
+  },
   "scripts": {
+    "bin": "node ./dst/index.js",
     "build": "tsc",
     "prepare": "pnpm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,5 +28,17 @@
   "bugs": {
     "url": "https://github.com/eva-llm/eva-cli/issues"
   },
-  "homepage": "https://github.com/eva-llm/eva-cli#readme"
+  "homepage": "https://github.com/eva-llm/eva-cli#readme",
+    "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.5.0",
+    "jest": "^30.3.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.1.0",
+    "commander": "^14.0.3",
+    "picocolors": "^1.1.1"
+  }
 }
