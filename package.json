@@ -1,0 +1,28 @@
+{
+  "name": "eva-cli",
+  "version": "0.1.0",
+  "description": "A terminal-based tool for local runs and debugging of eva-run",
+  "main": "dst/index.js",
+  "types": "dst/index.d.ts",
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "/dst"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "pnpm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eva-llm/eva-cli.git"
+  },
+  "author": "Sergei Chipiga",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eva-llm/eva-cli/issues"
+  },
+  "homepage": "https://github.com/eva-llm/eva-cli#readme"
+}
