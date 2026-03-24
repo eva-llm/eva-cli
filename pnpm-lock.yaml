@@ -17,6 +17,9 @@ importers:
       picocolors:
         specifier: ^1.1.1
         version: 1.1.1
+      undici:
+        specifier: ^7.24.5
+        version: 7.24.5
     devDependencies:
       '@types/jest':
         specifier: ^30.0.0
@@ -1294,6 +1297,10 @@ packages:
 
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
+
+  undici@7.24.5:
+    resolution: {integrity: sha512-3IWdCpjgxp15CbJnsi/Y9TCDE7HWVN19j1hmzVhoAkY/+CJx449tVxT5wZc1Gwg8J+P0LWvzlBzxYRnHJ+1i7Q==}
+    engines: {node: '>=20.18.1'}
 
   unrs-resolver@1.11.1:
     resolution: {integrity: sha512-bSjt9pjaEBnNiGgc9rUiHGKv5l4/TGzDmYw3RhnkJGtLhbnnA/5qJj7x3dNDCRx/PJxu774LlH8lCOlB4hEfKg==}
@@ -2825,6 +2832,8 @@ snapshots:
     optional: true
 
   undici-types@7.18.2: {}
+
+  undici@7.24.5: {}
 
   unrs-resolver@1.11.1:
     dependencies:

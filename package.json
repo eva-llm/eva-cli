@@ -29,7 +29,7 @@
     "url": "https://github.com/eva-llm/eva-cli/issues"
   },
   "homepage": "https://github.com/eva-llm/eva-cli#readme",
-    "devDependencies": {
+  "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^25.5.0",
     "jest": "^30.3.0",
@@ -39,6 +39,7 @@
   "dependencies": {
     "@clack/prompts": "^1.1.0",
     "commander": "^14.0.3",
-    "picocolors": "^1.1.1"
+    "picocolors": "^1.1.1",
+    "undici": "^7.24.5"
   }
 }
