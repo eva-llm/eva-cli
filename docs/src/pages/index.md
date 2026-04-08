@@ -1,5 +1,3 @@
-# eva-cli
-
 A terminal-based tool for local runs and debugging of [eva-run](https://eva-llm.github.io/eva-run).
 
 It uses [eva-parser](https://eva-llm.github.io/eva-parser) to convert [Promptfoo](https://www.promptfoo.dev/docs/getting-started) config into `eva-run` tasks.
