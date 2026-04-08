@@ -12,8 +12,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       '@eva-llm/eva-parser':
-        specifier: github:eva-llm/eva-parser
-        version: https://codeload.github.com/eva-llm/eva-parser/tar.gz/dff0031a8ec7ca6a67d088269714251c73494484
+        specifier: ^1.0.0
+        version: 1.0.0
       commander:
         specifier: ^14.0.3
         version: 14.0.3
@@ -228,9 +228,8 @@ packages:
   '@emnapi/wasi-threads@1.2.0':
     resolution: {integrity: sha512-N10dEJNSsUx41Z6pZsXU8FjPjpBEplgH24sfkmITrBED1/U2Esum9F3lfLrMjKHHjmi557zQn7kR9R+XWXu5Rg==}
 
-  '@eva-llm/eva-parser@https://codeload.github.com/eva-llm/eva-parser/tar.gz/dff0031a8ec7ca6a67d088269714251c73494484':
-    resolution: {tarball: https://codeload.github.com/eva-llm/eva-parser/tar.gz/dff0031a8ec7ca6a67d088269714251c73494484}
-    version: 0.1.0
+  '@eva-llm/eva-parser@1.0.0':
+    resolution: {integrity: sha512-PXHwfId0tOMGoBm8g3d/9wilpx26ouKdD9dV4K79PEhF9+PBYSkTmHiWyBJDK3T18c0KYUnlcV/RgvrxwECF0w==}
     engines: {node: '>=22'}
 
   '@isaacs/cliui@8.0.2':
@@ -1049,6 +1048,10 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
+  mustache@4.2.0:
+    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
+    hasBin: true
+
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
@@ -1606,8 +1609,9 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@eva-llm/eva-parser@https://codeload.github.com/eva-llm/eva-parser/tar.gz/dff0031a8ec7ca6a67d088269714251c73494484':
+  '@eva-llm/eva-parser@1.0.0':
     dependencies:
+      mustache: 4.2.0
       yaml: 2.8.3
       zod: 4.3.6
 
@@ -2661,6 +2665,8 @@ snapshots:
   minipass@7.1.3: {}
 
   ms@2.1.3: {}
+
+  mustache@4.2.0: {}
 
   napi-postinstall@0.3.4: {}
 
