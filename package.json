@@ -38,15 +38,11 @@
   },
   "dependencies": {
     "@clack/prompts": "^1.1.0",
+    "@eva-llm/eva-parser": "^1.0.0",
     "commander": "^14.0.3",
     "picocolors": "^1.1.1",
+    "postgres": "^3.4.9",
     "undici": "^7.24.5",
-    "uuidv7": "^1.2.1",
-    "@eva-llm/eva-parser": "github:eva-llm/eva-parser"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@eva-llm/eva-parser"
-    ]
+    "uuidv7": "^1.2.1"
   }
 }
