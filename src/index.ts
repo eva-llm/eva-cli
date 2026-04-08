@@ -6,24 +6,27 @@ import color from 'picocolors';
 import { parsePromptfoo } from '@eva-llm/eva-parser';
 import { readFileSync } from 'node:fs';
 import { uuidv7 } from 'uuidv7';
+import { request } from 'undici';
 
+import { observe } from './utils';
+import { type TReport } from './types';
+
+const HOST = process.env.EVA_RUN_HOST || 'localhost:3000';
 const program = new Command();
 
 program
   .name('eva-cli')
-  .version('0.1.0')
-  .description('tool for local runs and debugging of eva-run');
+  .version('1.0.0')
+  .description('cli tool for local runs and debugging of eva-run');
 
 program
   .command('run')
   .argument('[suite]', 'Path to the test suite')
-  .option('-r, --remote', 'Run on eva-run cluster', true)
-  .action(async (suite, options) => {
+  .action(async (suite) => {
     p.intro(`${color.bgCyan(color.black(' EVA-LLM '))}`);
 
     const path = suite || await p.text({
-      message: 'Which test suite do you want to run?',
-      placeholder: './tests/my-agent.yaml',
+      message: 'Provide path to the test suite:',
       validate: (value) => {
         if (!value) return 'Please enter a path';
       }
@@ -37,30 +40,61 @@ program
     const s = p.spinner();
 
     const fileContent = readFileSync(path, 'utf-8');
-    const evalRequest = parsePromptfoo(fileContent);
+    const evaTasks = parsePromptfoo(fileContent);
     const runId = uuidv7();
 
-    for (const evaTest of evalRequest) {
-      s.message(color.yellow('Submitting to eva-run cluster (localhost:3000)...'));
+    s.message(color.yellow(`Submitting to eva-run cluster (${HOST})...`));
 
-      const response = await fetch('http://localhost:3000/eval', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ run_id: runId, ...evaTest }),
-      });
+    const response = await request(`http://${HOST}/eval`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(evaTasks.map(task => ({ run_id: runId, ...task }))),
+      // NOTE: Optional, for stability
+      bodyTimeout: 0, 
+      headersTimeout: 0,
+    });
 
-      if (!response.ok) {
-        throw new Error(`Server responded with ${response.status}: ${await response.text()}`);
-      }
-
-      const result = await response.json();
-
-      s.stop(color.green(`Submission successful! ${JSON.stringify(result)}`));
+    if (response.statusCode !== 200) {
+      throw new Error(`Server responded with ${response.statusCode}: ${await response.body.text()}`);
     }
 
-    s.stop(color.green('Test suite submitted successfully!'));
+    const result = await response.body.json() as { test_ids: string[] };
 
-    p.outro('Happy testing!');
+    s.stop(color.yellow(`${result.test_ids.length} tests are started...`));
+
+    const report = await observe(result.test_ids);
+
+    printReport(report);
+
+    p.outro('All done');
   });
 
 program.parse();
+
+function printReport(report: TReport) {
+  const { testsAmount, passedTestsAmount, failedTests } = report;
+
+  if (failedTests.length > 0) {
+    console.log(color.red(`Failed tests: ${failedTests.length}`));
+  }
+
+  console.log(color.bold(`Total tests: ${testsAmount}`));
+  console.log(color.green(`Passed tests: ${passedTestsAmount}`));
+
+  if (failedTests.length > 0) {
+    console.log(color.red('Failed test details:'));
+
+    for (const test of failedTests) {
+      console.log(color.yellow('Prompt:'), test.prompt);
+      console.log(color.yellow('Output:'), test.output);
+
+      for (const assert of test.asserts!) {
+        console.log(color.red('criteria:'), assert.criteria);
+        console.log(color.red('reason:'), assert.reason);
+        console.log(color.bold(`passed: ${assert.passed}; score: ${assert.score}; threshold: ${assert.threshold}`));
+      }
+    }
+  }
+}
