@@ -43,7 +43,7 @@ program
     const evaTasks = parsePromptfoo(fileContent);
     const runId = uuidv7();
 
-    s.message(color.yellow(`Submitting to eva-run cluster (${HOST})...`));
+    console.log(color.yellow(`Submitting to eva-run cluster (${HOST})...`));
 
     const response = await request(`http://${HOST}/eval`, {
       method: 'POST',
@@ -62,26 +62,20 @@ program
 
     const result = await response.body.json() as { test_ids: string[] };
 
-    s.stop(color.yellow(`${result.test_ids.length} tests are started...`));
+    console.log(color.yellow(`${result.test_ids.length} tests are started...`));
 
-    const report = await observe(result.test_ids);
+    const report = await observe(runId, result.test_ids);
 
     printReport(report);
 
-    p.outro('All done');
+    p.outro(color.magenta('All done. Exiting...'));
+    process.exit(0);
   });
 
 program.parse();
 
 function printReport(report: TReport) {
   const { testsAmount, passedTestsAmount, failedTests } = report;
-
-  if (failedTests.length > 0) {
-    console.log(color.red(`Failed tests: ${failedTests.length}`));
-  }
-
-  console.log(color.bold(`Total tests: ${testsAmount}`));
-  console.log(color.green(`Passed tests: ${passedTestsAmount}`));
 
   if (failedTests.length > 0) {
     console.log(color.red('Failed test details:'));
@@ -91,10 +85,17 @@ function printReport(report: TReport) {
       console.log(color.yellow('Output:'), test.output);
 
       for (const assert of test.asserts!) {
-        console.log(color.red('criteria:'), assert.criteria);
-        console.log(color.red('reason:'), assert.reason);
-        console.log(color.bold(`passed: ${assert.passed}; score: ${assert.score}; threshold: ${assert.threshold}`));
+        console.log(color.red('- criteria:'), assert.criteria);
+        console.log(color.red('  reason:'), assert.reason);
+        console.log(color.bold(`  passed: ${assert.passed}; score: ${assert.score}; threshold: ${assert.threshold}`));
+        console.log();
       }
+      console.log();
     }
+    console.log();
+    console.log(color.red(`Failed tests: ${failedTests.length}`));
   }
+
+  console.log(color.green(`Passed tests: ${passedTestsAmount}`));
+  console.log(color.bold(`Total tests: ${testsAmount}`));
 }

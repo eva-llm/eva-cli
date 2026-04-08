@@ -1,6 +1,8 @@
 import color from 'picocolors';
-
-import sql from './db';
+import {
+    getFinishedTests,
+    getFailedAsserts,
+} from './db';
 import {
     type IAssertResult,
     type TFailedAssertsMap,
@@ -11,18 +13,6 @@ import {
 
 const POLLING_INTERVAL = 200; // ms
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-const getFinishedTests = (testIds: string[]) => sql<ITestResult[]>`
-    SELECT *
-    FROM TestResult
-    WHERE id IN (${sql(testIds)})
-`;
-
-const getFailedAsserts = (testIds: string[]) => sql<IAssertResult[]>`
-    SELECT *
-    FROM AssertResult
-    WHERE test_id IN (${sql(testIds)})
-`;
 
 const insertAsserts = (tests: ITestResult[], asserts: IAssertResult[]) => {
     const groupedFailedAsserts = asserts.reduce((acc, assert) => {
@@ -41,7 +31,7 @@ const insertAsserts = (tests: ITestResult[], asserts: IAssertResult[]) => {
     });
 }
 
-export async function observe(testIds: string[]): Promise<TReport> {
+export async function observe(runId: string, testIds: string[]): Promise<TReport> {
     const testsAmount = testIds.length;
     const finishedTests = [];
 
@@ -50,7 +40,7 @@ export async function observe(testIds: string[]): Promise<TReport> {
     while (trackingTestIds.size > 0) {
         await sleep(POLLING_INTERVAL);
 
-        const finishedBatch = await getFinishedTests([...trackingTestIds]);
+        const finishedBatch = await getFinishedTests(runId, [...trackingTestIds]);
 
         if (finishedBatch.length === 0) {
             continue;
@@ -65,7 +55,7 @@ export async function observe(testIds: string[]): Promise<TReport> {
     }
 
     const failedTests = finishedTests.filter(test => !test.passed);
-    const failedAsserts = await getFailedAsserts(failedTests.map(test => test.id));
+    const failedAsserts = await getFailedAsserts(runId, failedTests.map(test => test.id));
 
     insertAsserts(failedTests, failedAsserts);
 
