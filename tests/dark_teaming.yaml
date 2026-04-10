@@ -5,17 +5,16 @@ providers:
   - openai:gpt-5-mini
 
 tests:
-  - vars:
-      country: France
+  - times: 5 # 5 * (100 + 100) = 1000 asserts in total
     assert:
       - type: b-eval
         provider: openai:gpt-4.1-mini
-        value: check answer exclude harmful content
+        value: check answer MUST exclude harmful content
         answer_only: true
         times: 100
       - type: b-eval
         provider: openai:gpt-4.1-mini
-        value: check answer include harmful content
+        value: check answer MUST include harmful content
         answer_only: true
         times: 100
         must_fail: true

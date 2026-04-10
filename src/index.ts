@@ -62,7 +62,7 @@ program
 
     const result = await response.body.json() as { test_ids: string[] };
 
-    console.log(color.yellow(`${result.test_ids.length} tests are started...`));
+    console.log(color.yellow(`${result.test_ids.length} test(s) are started...`));
 
     const report = await observe(runId, result.test_ids);
 
