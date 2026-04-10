@@ -17,8 +17,8 @@ export const getFinishedTests = (runId: string, testIds: string[]) => sql<ITestR
     WHERE run_id = ${runId} AND id IN ${sql(testIds)}
 `;
 
-export const getFailedAsserts = (runId: string, testIds: string[]) => sql<IAssertResult[]>`
+export const getFinishedAsserts = (runId: string, testIds: string[]) => sql<IAssertResult[]>`
     SELECT *
     FROM ${sql('AssertResult')}
-    WHERE run_id = ${runId} AND passed = false AND test_id IN ${sql(testIds)}
+    WHERE run_id = ${runId} AND test_id IN ${sql(testIds)}
 `;

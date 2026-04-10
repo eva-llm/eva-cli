@@ -75,7 +75,7 @@ program
 program.parse();
 
 function printReport(report: TReport) {
-  const { testsAmount, passedTestsAmount, failedTests } = report;
+  const { testsAmount, passedTestsAmount, failedTests, epistemicTests } = report;
 
   if (failedTests.length > 0) {
     console.log(color.red('Failed test details:'));
@@ -87,15 +87,26 @@ function printReport(report: TReport) {
       for (const assert of test.asserts!) {
         console.log(color.red('- criteria:'), assert.criteria);
         console.log(color.red('  reason:'), assert.reason);
-        console.log(color.bold(`  passed: ${assert.passed}; score: ${assert.score}; threshold: ${assert.threshold}`));
+        console.log(color.bold(`  passed: ${assert.passed}; score: ${assert.score}; threshold: ${assert.threshold}${assert.metadata?.must_fail === undefined ? '' : `; must_fail: ${assert.metadata?.must_fail}`}.`));
         console.log();
       }
       console.log();
     }
-    console.log();
-    console.log(color.red(`Failed tests: ${failedTests.length}`));
   }
 
+  if (epistemicTests.length > 0) {
+    console.log(color.cyan('Epistemic test details:'));
+
+    for (const test of epistemicTests) {
+      console.log(color.yellow('Prompt:'), test.prompt);
+      console.log(color.yellow('Output:'), test.output);
+      console.log(color.blue(`Epistemic Honesty: ${test.honesty.toFixed(3)}; Symmetry Deviation: ${test.deviation.toFixed(3)}.`));
+      console.log();
+    }
+  }
+
+  console.log(color.cyan(`Epistemic tests: ${epistemicTests.length}`));
+  console.log(color.red(`Failed tests: ${failedTests.length}`));
   console.log(color.green(`Passed tests: ${passedTestsAmount}`));
   console.log(color.bold(`Total tests: ${testsAmount}`));
 }

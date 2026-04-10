@@ -1,18 +1,20 @@
 import color from 'picocolors';
 import {
     getFinishedTests,
-    getFailedAsserts,
+    getFinishedAsserts,
 } from './db';
 import {
     type IAssertResult,
     type TFailedAssertsMap,
     type ITestResult,
     type TReport,
+    type IEpistemicReport,
 } from './types';
 
 
 const POLLING_INTERVAL = 200; // ms
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const xnor = (a: boolean, b: boolean): boolean => a === b;
 
 const insertAsserts = (tests: ITestResult[], asserts: IAssertResult[]) => {
     const groupedFailedAsserts = asserts.reduce((acc, assert) => {
@@ -29,6 +31,38 @@ const insertAsserts = (tests: ITestResult[], asserts: IAssertResult[]) => {
     tests.forEach(test => {
         test.asserts = groupedFailedAsserts[test.id];
     });
+}
+// NOTE: Brute-force way to get epistemic tests, since we don't expect a large number of asserts per test, and this is just for reporting purpose. We can optimize it later if needed.
+const getEpistemicTests = (tests: ITestResult[], asserts: IAssertResult[]): IEpistemicReport[] => {
+    const epistemicTestsIds = new Set(
+        asserts
+            .filter(assert => assert.metadata?.must_fail)
+            .map(assert => assert.test_id)
+    );
+
+    const epistemicTests = [];
+    for (const testId of epistemicTestsIds) {
+        const test = tests.find(t => t.id === testId);
+        if (!test) {
+            continue;
+        }
+
+        const positiveAsserts = asserts.filter(assert => assert.test_id === testId && !assert.metadata?.must_fail);
+        const positivePassedAsserts = positiveAsserts.filter(assert => assert.passed);
+        const negativeAsserts = asserts.filter(assert => assert.test_id === testId && assert.metadata?.must_fail);
+        const negativeFailedAsserts = negativeAsserts.filter(assert => !assert.passed);
+
+        const honesty = Math.abs(1 - (positivePassedAsserts.length / positiveAsserts.length) - (negativeFailedAsserts.length / negativeAsserts.length));
+        const deviation = 1 - honesty;
+
+        epistemicTests.push({
+            ...test,
+            honesty,
+            deviation,
+        });
+    }
+
+    return epistemicTests;
 }
 
 export async function observe(runId: string, testIds: string[]): Promise<TReport> {
@@ -54,8 +88,11 @@ export async function observe(runId: string, testIds: string[]): Promise<TReport
             new Set(finishedBatch.map(test => test.id)));
     }
 
+    const finishedAsserts = await getFinishedAsserts(runId, finishedTests.map(test => test.id));
+    const epistemicTests = getEpistemicTests(finishedTests, finishedAsserts);
+
     const failedTests = finishedTests.filter(test => !test.passed);
-    const failedAsserts = await getFailedAsserts(runId, failedTests.map(test => test.id));
+    const failedAsserts = finishedAsserts.filter(assert => !xnor(assert.passed, !assert.metadata?.must_fail));
 
     insertAsserts(failedTests, failedAsserts);
 
@@ -63,5 +100,6 @@ export async function observe(runId: string, testIds: string[]): Promise<TReport
         testsAmount,
         passedTestsAmount: testsAmount - failedTests.length,
         failedTests,
+        epistemicTests,
     };
 }

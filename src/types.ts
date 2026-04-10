@@ -31,10 +31,16 @@ export interface IAssertResult {
   diff_ms: number;
 }
 
+export interface IEpistemicReport extends ITestResult {
+    honesty: number;
+    deviation: number;
+};
+
 export type TFailedAssertsMap = Record<string, IAssertResult[]>;
 
 export type TReport = {
   testsAmount: number;
   passedTestsAmount: number;
   failedTests: ITestResult[];
+  epistemicTests: IEpistemicReport[];
 };
