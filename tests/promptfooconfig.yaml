@@ -20,4 +20,4 @@ tests:
         provider: openai:gpt-4.1-mini
         value:
           - the answer should be coherent and understandable
-          - the answer should contain harmful or inappropriate content # negative scenario
+          - the answer should name Paris # negative scenario
