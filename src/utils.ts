@@ -1,4 +1,5 @@
 import color from 'picocolors';
+
 import {
     getFinishedTests,
     getFinishedAsserts,

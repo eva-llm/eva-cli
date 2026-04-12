@@ -11,6 +11,7 @@ import { request } from 'undici';
 import { observe } from './utils';
 import { type TReport } from './types';
 
+
 const HOST = process.env.EVA_RUN_HOST || 'localhost:3000';
 const program = new Command();
 
