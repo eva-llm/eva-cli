@@ -82,6 +82,7 @@ function printReport(report: TReport) {
     console.log(color.red('Failed test details:'));
 
     for (const test of failedTests) {
+      console.log(color.bold(`${test.provider} ${test.model} T=${test.metadata?.temperature ?? 'default'}`));
       console.log(color.yellow('Prompt:'), test.prompt);
       console.log(color.yellow('Output:'), test.output);
 
@@ -99,6 +100,7 @@ function printReport(report: TReport) {
     console.log(color.cyan('Epistemic test details:'));
 
     for (const test of epistemicTests) {
+      console.log(color.bold(`${test.provider} ${test.model} T=${test.metadata?.temperature ?? 'default'}`));
       console.log(color.yellow('Prompt:'), test.prompt);
       console.log(color.yellow('Output:'), test.output);
       console.log(color.blue(`Epistemic Honesty: ${test.honesty.toFixed(3)}; Symmetry Deviation: ${test.deviation.toFixed(3)}.`));

@@ -1,0 +1,43 @@
+prompts:
+  - What is the capital of France?
+
+providers:
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.0
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.1
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.2
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.3
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.4
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.5
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.6
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.7
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.8
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 0.9
+  - id: openai:gpt-4.1-mini
+    config:
+      temperature: 1.0
+
+tests:
+  - assert:
+      - type: equals
+        value: The capital of France is Paris.
+    times: 100
