@@ -131,6 +131,7 @@ function printReport(report: TReport) {
 
   console.log(color.cyan(`Epistemic tests: ${epistemicTests.length}`));
   console.log(color.red(`Failed tests: ${failedTests.length}`));
+  console.log(color.yellow(`Missed tests: ${report.missedTestsAmount}`));
   console.log(color.green(`Passed tests: ${passedTestsAmount}`));
   console.log(color.bold(`Total tests: ${testsAmount}`));
 }

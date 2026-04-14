@@ -44,4 +44,5 @@ export type TReport = {
   passedTestsAmount: number;
   failedTests: ITestResult[];
   epistemicTests: IEpistemicReport[];
+  missedTestsAmount: number;
 };
