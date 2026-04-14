@@ -9,7 +9,10 @@ import { uuidv7 } from 'uuidv7';
 import { request } from 'undici';
 
 import { observe } from './utils';
-import { type TReport } from './types';
+import {
+  type ITestResult,
+  type TReport,
+} from './types';
 
 
 const HOST = process.env.EVA_RUN_HOST || 'localhost:3000';
@@ -75,6 +78,24 @@ program
 
 program.parse();
 
+const formatModelInfo = (test: ITestResult) => {
+  const result = `${test.provider} | ${test.model}`;
+
+  if (test.metadata?.temperature !== undefined) {
+    return color.blue(`${result} | T=${test.metadata.temperature}`);
+  }
+
+  if (test.metadata?.topP !== undefined) {
+    return color.blue(`${result} | topP=${test.metadata.topP}`);
+  }
+
+  if (test.metadata?.topK !== undefined) {
+    return color.blue(`${result} | topK=${test.metadata.topK}`);
+  }
+
+  return color.blue(result);
+};
+
 function printReport(report: TReport) {
   const { testsAmount, passedTestsAmount, failedTests, epistemicTests } = report;
 
@@ -82,7 +103,7 @@ function printReport(report: TReport) {
     console.log(color.red('Failed test details:'));
 
     for (const test of failedTests) {
-      console.log(color.bold(`${test.provider} ${test.model} T=${test.metadata?.temperature ?? 'default'}`));
+      console.log(formatModelInfo(test));
       console.log(color.yellow('Prompt:'), test.prompt);
       console.log(color.yellow('Output:'), test.output);
 
@@ -100,7 +121,7 @@ function printReport(report: TReport) {
     console.log(color.cyan('Epistemic test details:'));
 
     for (const test of epistemicTests) {
-      console.log(color.bold(`${test.provider} ${test.model} T=${test.metadata?.temperature ?? 'default'}`));
+      console.log(formatModelInfo(test));
       console.log(color.yellow('Prompt:'), test.prompt);
       console.log(color.yellow('Output:'), test.output);
       console.log(color.blue(`Epistemic Honesty: ${test.honesty.toFixed(3)}; Symmetry Deviation: ${test.deviation.toFixed(3)}.`));
