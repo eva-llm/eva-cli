@@ -1,6 +1,6 @@
 {
   "name": "@eva-llm/eva-cli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A terminal-based tool for local runs and debugging of eva-run",
   "main": "dst/index.js",
   "types": "dst/index.d.ts",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@clack/prompts": "^1.1.0",
-    "@eva-llm/eva-parser": "^1.0.2",
+    "@eva-llm/eva-parser": "^1.0.3",
     "commander": "^14.0.3",
     "picocolors": "^1.1.1",
     "postgres": "^3.4.9",
