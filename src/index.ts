@@ -79,6 +79,10 @@ program
 program.parse();
 
 const formatModelInfo = (test: ITestResult) => {
+  if (!test.provider && !test.model) {
+    return color.magenta('JQA');
+  }
+
   const result = `${test.provider} | ${test.model}`;
 
   if (test.metadata?.temperature !== undefined) {
@@ -105,7 +109,7 @@ function printReport(report: TReport) {
     for (const test of failedTests) {
       console.log(formatModelInfo(test));
       console.log(color.yellow('Prompt:'), test.prompt);
-      console.log(color.yellow('Output:'), test.output);
+      console.log(test.metadata?.output_override ? color.blue('Output (injected):') : color.yellow('Output:'), test.output);
 
       for (const assert of test.asserts!) {
         console.log(color.red('- criteria:'), assert.criteria);
@@ -123,7 +127,7 @@ function printReport(report: TReport) {
     for (const test of epistemicTests) {
       console.log(formatModelInfo(test));
       console.log(color.yellow('Prompt:'), test.prompt);
-      console.log(color.yellow('Output:'), test.output);
+      console.log(test.metadata?.output_override ? color.blue('Output (injected):') : color.yellow('Output:'), test.output);
       console.log(color.blue(`Epistemic Honesty: ${test.honesty.toFixed(3)}; Symmetry Deviation: ${test.deviation.toFixed(3)}.`));
       console.log();
     }
