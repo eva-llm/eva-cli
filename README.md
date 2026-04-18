@@ -89,7 +89,7 @@ Total tests: 2
 ```
 
 ### Epistemic Honesty (Dark Teaming)
-Measuring "Symmetry Deviation" by forcing the model into contradictory logical paths.
+Measuring Judge "Symmetry Deviation" by forcing the model into contradictory logical paths.
 
 ```yml
 # dark_teaming.yaml
@@ -183,3 +183,6 @@ Total tests: 5
 │
 └  All done. Exiting...
 ```
+
+### JQA: Judge Quality Audit (AI Metrology)
+Measuring Judge "Symmetry Deviation" by injecting output in order to skip model answering. Subset of Dark Teaming testing.
