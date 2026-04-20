@@ -8,6 +8,8 @@ A terminal-based interface for local execution and debugging of [eva-run](https:
 
 ## Quick Start
 
+Firstly be sure you have running `eva-run` [node](https://eva-llm.github.io/eva-run/#quick-start).
+
 ```bash
 npm i -g @eva-llm/eva-cli
 export DATABASE_URL="postgresql://..." # required for results monitoring
