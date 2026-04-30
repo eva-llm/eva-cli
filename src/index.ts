@@ -41,6 +41,7 @@ program
       process.exit(0);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const s = p.spinner();
 
     const fileContent = readFileSync(path, 'utf-8');

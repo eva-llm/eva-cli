@@ -6,6 +6,7 @@ export interface ITestResult {
   prompt: string;
   output: string;
   passed: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata: Record<string, any> | null;
   started_at: Date;
   assert_started_at: Date;
@@ -26,6 +27,7 @@ export interface IAssertResult {
   score: number;
   reason: string;
   threshold: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata: Record<string, any> | null;
   started_at: Date;
   finished_at: Date;
